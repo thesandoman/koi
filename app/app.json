@@ -17,7 +17,8 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.sandosit.koi"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -36,6 +37,17 @@
     "experiments": {
       "typedRoutes": true,
       "baseUrl": "/app"
-    }
+    },
+    "extra": {
+      "router": {
+        "asyncRoutes": {
+          "web": true
+        }
+      },
+      "eas": {
+        "projectId": "4d278dcd-2634-409b-befa-2d24c41c40bc"
+      }
+    },
+    "owner": "sandosit"
   }
 }
