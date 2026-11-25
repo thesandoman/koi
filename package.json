@@ -1,0 +1,10 @@
+{
+  "name": "koi",
+  "private": true,
+  "description": "Koi monorepo root. Railway builds and serves site/ from here.",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "cd site && npm ci && npm run build",
+    "start": "node site/server.mjs"
+  }
+}
