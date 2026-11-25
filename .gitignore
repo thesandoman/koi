@@ -9,3 +9,8 @@ site/.impeccable/questions/
 site/.impeccable/hook.cache.json
 .expo/
 app/dist/
+.impeccable/config.local.json
+.impeccable/hook.cache.json
+.impeccable/review/
+.impeccable/mocks/
+.impeccable/questions/
