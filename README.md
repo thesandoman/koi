@@ -9,3 +9,4 @@ A place-first dating app for Bangkok (Thai and English). People match on places 
 - `docs/research/`: competitive notes.
 - `pinky-template-2026-11-25/`: the rules (`PINKY-TEMPLATE.md`), pure core (`pinky-core.ts`) and starting schema (`schema.sql`).
 - `koi-logo/`: brand SVGs.
+- `PRODUCT.md`: the shared product record (users, purpose, positioning, brand, constraints) for both surfaces.
