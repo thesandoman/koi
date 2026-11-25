@@ -8,6 +8,6 @@
   "scripts": {
     "build": "cd site && npm ci && npm run build",
     "start": "node site/server.mjs",
-    "build:app": "cd app && npm ci && npx expo export --platform web && rm -rf ../site/public/app && cp -R dist ../site/public/app"
+    "build:app": "node scripts/build-app-web.mjs"
   }
 }

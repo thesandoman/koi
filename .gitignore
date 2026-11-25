@@ -14,3 +14,5 @@ app/dist/
 .impeccable/review/
 .impeccable/mocks/
 .impeccable/questions/
+site/test-results/
+site/playwright-report/

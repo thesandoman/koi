@@ -4,9 +4,6 @@ import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";
-import { BricolageGrotesque_700Bold, BricolageGrotesque_800ExtraBold } from "@expo-google-fonts/bricolage-grotesque";
-import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold } from "@expo-google-fonts/inter";
-import { NotoSansThai_400Regular, NotoSansThai_600SemiBold, NotoSansThai_700Bold } from "@expo-google-fonts/noto-sans-thai";
 import { KoiProvider, useKoi } from "@/engine/store";
 import { fonts, radius, useColors } from "@/theme";
 import { hap } from "@/components/ui";
@@ -38,11 +35,24 @@ function Toast() {
   );
 }
 
+// Only the eight faces the app uses (the package index would bundle all 34).
+const FONT_FILES = {
+  BricolageGrotesque_700Bold: require("@expo-google-fonts/bricolage-grotesque/700Bold/BricolageGrotesque_700Bold.ttf"),
+  BricolageGrotesque_800ExtraBold: require("@expo-google-fonts/bricolage-grotesque/800ExtraBold/BricolageGrotesque_800ExtraBold.ttf"),
+  Inter_400Regular: require("@expo-google-fonts/inter/400Regular/Inter_400Regular.ttf"),
+  Inter_500Medium: require("@expo-google-fonts/inter/500Medium/Inter_500Medium.ttf"),
+  Inter_600SemiBold: require("@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.ttf"),
+  NotoSansThai_400Regular: require("@expo-google-fonts/noto-sans-thai/400Regular/NotoSansThai_400Regular.ttf"),
+  NotoSansThai_600SemiBold: require("@expo-google-fonts/noto-sans-thai/600SemiBold/NotoSansThai_600SemiBold.ttf"),
+  NotoSansThai_700Bold: require("@expo-google-fonts/noto-sans-thai/700Bold/NotoSansThai_700Bold.ttf"),
+};
+
 function Shell() {
   const c = useColors();
   const { s } = useKoi();
-  const [loaded] = useFonts({ BricolageGrotesque_700Bold, BricolageGrotesque_800ExtraBold, Inter_400Regular, Inter_500Medium, Inter_600SemiBold, NotoSansThai_400Regular, NotoSansThai_600SemiBold, NotoSansThai_700Bold });
-  if (!loaded || !s.loaded) return <View style={{ flex: 1, backgroundColor: c.bg }} />;
+  const [loaded, fontError] = useFonts(FONT_FILES);
+  // A font that fails to load must never leave the screen blank: fall back to system fonts.
+  if (!(loaded || fontError) || !s.loaded) return <View style={{ flex: 1, backgroundColor: c.bg }} />;
   return (
     <View style={{ flex: 1, backgroundColor: c.bg2, alignItems: "center" }}>
      <View style={{ flex: 1, width: "100%", maxWidth: 520, backgroundColor: c.bg }}>

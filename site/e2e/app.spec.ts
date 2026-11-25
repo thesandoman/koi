@@ -1,0 +1,66 @@
+import { expect, test, type Page } from "@playwright/test";
+
+/** Collects every failed same-origin request and every console error, so a missing file can never hide behind a blank page. */
+function watch(page: Page) {
+  const problems: string[] = [];
+  page.on("response", (r) => {
+    const u = new URL(r.url());
+    if (u.origin === new URL(page.url() === "about:blank" ? r.url() : page.url()).origin && r.status() >= 400 && !u.pathname.startsWith("/api/")) problems.push(`${r.status()} ${u.pathname}`);
+  });
+  page.on("console", (m) => { if (m.type() === "error") problems.push(`console: ${m.text()}`); });
+  page.on("pageerror", (e) => problems.push(`pageerror: ${e.message}`));
+  return problems;
+}
+
+test("the site's Open the app button leads to a working app, not a blank page", async ({ page }) => {
+  const problems = watch(page);
+  await page.goto("/");
+  await page.getByRole("link", { name: "Open the live app" }).click();
+  await expect(page).toHaveURL(/\/app\/?/);
+  await expect(page.getByText("Pick the place first.")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Get started" })).toBeVisible();
+  expect(problems, problems.join("\n")).toEqual([]);
+});
+
+test("a deep link inside the app renders, not a blank page", async ({ page }) => {
+  const problems = watch(page);
+  await page.goto("/app/plans");
+  await expect(page.getByText("No plans yet.", { exact: false })).toBeVisible();
+  expect(problems, problems.join("\n")).toEqual([]);
+});
+
+test("the whole flow works: onboarding, private hook, unlock, plan, chat nudge, close", async ({ page }) => {
+  const problems = watch(page);
+  await page.goto("/app");
+  await page.getByRole("button", { name: "Get started" }).click();
+  await page.getByRole("button", { name: "I agree" }).click();
+  await page.getByLabel("First name").fill("Aom");
+  await page.getByLabel("Birth year").fill("1996");
+  await page.getByRole("button", { name: "Woman", exact: true }).click();
+  await page.getByRole("button", { name: "Next" }).click();
+  for (const place of ["Lumphini Park", "Or Tor Kor Market", "Yaowarat street food"]) await page.getByRole("button", { name: `Pin ${place}` }).click();
+  await page.getByRole("button", { name: "Next" }).click();
+  for (const slot of ["Sat Evening", "Sat Afternoon", "Sun Morning"]) await page.getByRole("button", { name: slot }).click();
+  await page.getByRole("button", { name: "Start", exact: true }).click();
+
+  // The hook is private: after tapping, only "your pinky is out" is shown.
+  await expect(page.getByText("Today's introductions")).toBeVisible();
+  await page.getByRole("button", { name: "Hook pinkies" }).first().click();
+  await expect(page.getByText("Your pinky is out.")).toBeVisible();
+  await expect(page.getByText("both hooked pinkies")).toHaveCount(0);
+
+  // The sample person hooks back after a moment: both find out, with a neutral notice.
+  await expect(page.getByText("You and Mint both hooked pinkies.")).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByText("Something nice is waiting for you")).toBeVisible();
+  await page.getByRole("button", { name: "Open our plan" }).click();
+
+  // The plan uses the place both pinned, and a link is never sent in chat.
+  await expect(page.getByText("Plan with Mint")).toBeVisible();
+  // One of the three shared places is proposed (the pick is seeded per plan, so it varies).
+  await expect(page.getByText(/You both pinned (Lumphini Park|Or Tor Kor Market|Yaowarat street food)\./)).toBeVisible();
+  await page.getByRole("button", { name: "Confirm this plan" }).click();
+  await page.getByRole("textbox", { name: "Message" }).fill("https://example.com");
+  await page.getByRole("button", { name: "Send" }).click();
+  await expect(page.getByText("Links aren't sent in Koi.")).toBeVisible();
+  expect(problems, problems.join("\n")).toEqual([]);
+});
