@@ -3,6 +3,7 @@
 A place-first dating app for Bangkok (Thai and English). People match on places they'd both actually go; a match arrives as a plan with a place and a time, and ends kindly if it doesn't work.
 
 - `site/`: the marketing site and interactive demo (live on Vercel).
+- `app/`: the Expo + React Native app (on-device prototype using the real rules).
 - `docs/superpowers/specs/`: the approved MVP design.
 - `docs/superpowers/plans/`: the implementation plan.
 - `docs/research/`: competitive notes.

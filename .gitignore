@@ -7,3 +7,5 @@ site/.impeccable/review/
 site/.impeccable/mocks/
 site/.impeccable/questions/
 site/.impeccable/hook.cache.json
+.expo/
+app/dist/
