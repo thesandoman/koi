@@ -1,0 +1,11 @@
+# Koi site
+
+React + TypeScript + Vite + Tailwind CSS v4 + `motion`. Built to static files and deployed on Vercel. Two components are adapted from 21st.dev: the tilting Phone Scroll Hero and the spring Segmented Control.
+
+- Develop: `npm install && npm run dev`
+- Build: `npm run build` (output in `dist/`)
+- The waitlist form only appears when `WAITLIST_WEBHOOK_URL` is set in Vercel. `api/waitlist.js` forwards `{ email, area, locale, consentAt, source }` to that URL and stores nothing itself.
+- No cookies, trackers or third-party requests; fonts are self-hosted from `public/fonts/`.
+- Thai copy (`src/i18n-strings.ts`) is machine-drafted and needs a native read before launch.
+- Demo venues and "Sam" are illustrative. Do not add statistics, testimonials or partner names.
+- Product truth: `PRODUCT.md`. Surface strategy: `.impeccable/surfaces/index-html.md`.

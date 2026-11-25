@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 152 110" width="456" height="330" role="img" aria-label="Koi">
+  <title>Koi</title>
+  <!-- For dark backgrounds (#14201B). -->
+  <g fill="none" stroke="#EEF2EC" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 10 V100"/>
+    <path d="M12 72 L44 46"/>
+    <path d="M24 64 L46 100"/>
+    <circle cx="86" cy="73" r="26"/>
+    <path d="M136 56 V100"/>
+  </g>
+  <path d="M136 42 C128 32 124 27 124 21 A12 12 0 1 1 148 21 C148 27 144 32 136 42 Z" fill="#F28CA6"/>
+  <circle cx="136" cy="21" r="4.5" fill="#14201B"/>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Koi app icon">
+  <title>Koi</title>
+  <!-- Two hooks linked together: two little fingers making a pinky promise. -->
+  <rect width="512" height="512" rx="116" fill="#C42E57"/>
+  <g fill="none" stroke-width="38" stroke-linecap="round">
+    <path d="M168 132 V292 A62 62 0 0 0 292 292 V236" stroke="#FBFCF9"/>
+    <path d="M344 380 V220 A62 62 0 0 0 220 220 V276" stroke="#F9C9D6"/>
+  </g>
+</svg>

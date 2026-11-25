@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@font-face { font-family: "Bricolage"; src: url("/fonts/bricolage-grotesque-latin-wght-normal.woff2") format("woff2"); font-weight: 200 800; font-display: swap; }
+@font-face { font-family: "Inter Koi"; src: url("/fonts/inter-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Noto Thai Koi"; src: url("/fonts/noto-sans-thai-thai-wght-normal.woff2") format("woff2"); font-weight: 100 900; font-display: swap; unicode-range: U+0E01-0E5B, U+200C-200D, U+25CC; }
+@font-face { font-family: "Noto Thai Koi"; src: url("/fonts/noto-sans-thai-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; font-display: swap; unicode-range: U+0000-00FF, U+2000-206F; }
+
+:root {
+  color-scheme: light dark;
+  --bg: #F4F6F1; --bg2: #E8EDE6; --card: #FBFCF9; --ink: #15201C; --body: #46534D; --line: #CCD6CF;
+  --rose: #C42E57; --on-rose: #FFFFFF; --leaf: #2E7D5B; --leaf-soft: #DCEFE4; --on-leaf: #FFFFFF; --focus: #1B5FD1;
+  --phone-shadow: 0 12px 24px rgb(21 32 28 / .16), 0 50px 80px -24px rgb(21 32 28 / .38);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14201B; --bg2: #1A2822; --card: #1F2E28; --ink: #EEF2EC; --body: #AEBDB5; --line: #33443C;
+    --rose: #F28CA6; --on-rose: #14201B; --leaf: #62C195; --leaf-soft: #20382D; --on-leaf: #14201B; --focus: #8AB4FF;
+    --phone-shadow: 0 12px 24px rgb(0 0 0 / .4), 0 50px 80px -24px rgb(0 0 0 / .7);
+  }
+}
+
+@theme inline {
+  --color-background: var(--bg); --color-foreground: var(--ink); --color-card: var(--card);
+  --color-muted: var(--bg2); --color-muted-foreground: var(--body); --color-border: var(--line);
+  --color-primary: var(--rose); --color-primary-foreground: var(--on-rose);
+  --color-leaf: var(--leaf); --color-leaf-soft: var(--leaf-soft); --color-on-leaf: var(--on-leaf);
+  --font-heading: "Bricolage", "Noto Thai Koi", system-ui, sans-serif;
+  --font-sans: "Inter Koi", "Noto Thai Koi", system-ui, sans-serif;
+  --shadow-phone: var(--phone-shadow);
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--font-sans); line-height: 1.6; min-height: 100dvh; }
+  html[lang="th"] body { line-height: 1.8; }
+  h1, h2, h3 { font-family: var(--font-heading); text-wrap: balance; }
+  p { text-wrap: pretty; }
+  button { cursor: pointer; }
+  ::selection { background: var(--leaf); color: var(--on-leaf); }
+  input, select, textarea { caret-color: var(--leaf); accent-color: var(--leaf); }
+  * { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  a { text-underline-offset: 0.2em; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 8px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+}
+
+@layer base {
+  html[lang="th"] h1 { letter-spacing: 0; line-height: 1.2; }
+  html[lang="th"] h2, html[lang="th"] h3 { letter-spacing: 0; line-height: 1.3; }
+}
