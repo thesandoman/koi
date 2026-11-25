@@ -44,10 +44,12 @@ function Shell() {
   const [loaded] = useFonts({ BricolageGrotesque_700Bold, BricolageGrotesque_800ExtraBold, Inter_400Regular, Inter_500Medium, Inter_600SemiBold, NotoSansThai_400Regular, NotoSansThai_600SemiBold, NotoSansThai_700Bold });
   if (!loaded || !s.loaded) return <View style={{ flex: 1, backgroundColor: c.bg }} />;
   return (
-    <View style={{ flex: 1, backgroundColor: c.bg }}>
+    <View style={{ flex: 1, backgroundColor: c.bg2, alignItems: "center" }}>
+     <View style={{ flex: 1, width: "100%", maxWidth: 520, backgroundColor: c.bg }}>
       <StatusBar style="auto" />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: c.bg }, animation: "fade_from_bottom" }} />
       <Toast />
+     </View>
     </View>
   );
 }

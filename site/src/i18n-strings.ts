@@ -106,7 +106,7 @@ export const STRINGS: Record<Lang, Record<string, string>> = {
     "join.needArea": "Choose the area you live near.",
     "join.needConsent": "Tick the box so we know you agree.",
     "join.fail": "Something went wrong on our side. Try again in a minute.",
-    "foot.p": "Koi is being built in Bangkok. This site is a demo: nothing you tap here is saved or sent anywhere. Sam is an example person, not a real user.",
+    "foot.p": "Koi is being built in Bangkok. The demo on this page saves nothing. The app at /app is a working prototype with sample people, and it saves to your browser only. Sam and the people in the app are examples, not real users.",
     "day.m": "Morning", "day.a": "Afternoon", "day.e": "Evening"
   },
   th: {
@@ -213,7 +213,7 @@ export const STRINGS: Record<Lang, Record<string, string>> = {
     "join.needArea": "เลือกย่านที่คุณอยู่ใกล้",
     "join.needConsent": "ติ๊กช่องนี้เพื่อให้เรารู้ว่าคุณยินยอม",
     "join.fail": "ฝั่งเราขัดข้อง ลองใหม่อีกครั้งในอีกสักครู่",
-    "foot.p": "Koi กำลังสร้างในกรุงเทพฯ เว็บนี้เป็นเดโม สิ่งที่คุณแตะไม่ถูกบันทึกหรือส่งไปที่ใด แซมเป็นตัวอย่าง ไม่ใช่ผู้ใช้จริง",
+    "foot.p": "Koi กำลังสร้างในกรุงเทพฯ เดโมในหน้านี้ไม่บันทึกอะไร ส่วนแอปที่ /app เป็นต้นแบบที่ใช้งานได้ด้วยคนตัวอย่าง และบันทึกในเบราว์เซอร์ของคุณเท่านั้น แซมและคนในแอปเป็นตัวอย่าง ไม่ใช่ผู้ใช้จริง",
     "day.m": "เช้า", "day.a": "บ่าย", "day.e": "เย็น"
   }
 };

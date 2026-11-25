@@ -24,6 +24,7 @@ export function Header() {
         <div className="flex items-center gap-2">
           <SegmentedControl size="lg" label="Language" value={s.lang} onChange={(v) => dispatch({ type: "lang", l: v === "th" ? "th" : "en" })}
             options={[{ value: "en", label: "EN" }, { value: "th", label: <span lang="th">ไทย</span> }]} />
+          <LinkBtn variant="plain" href="/app" className="hidden min-h-[3.25rem] px-5 md:inline-flex">{t("app.open")}</LinkBtn>
           <LinkBtn variant="primary" href="#join" className="min-h-[3.25rem] px-4 sm:px-5">{t("nav.join")}</LinkBtn>
         </div>
       </div>
@@ -43,6 +44,7 @@ export function Hero() {
           <h1 className="font-heading text-[clamp(3.25rem,11vw,6rem)] font-extrabold leading-[0.92] tracking-[-0.035em]">{t("hero.h1")}</h1>
           <p className="mx-auto mt-4 max-w-[34ch] text-lg text-foreground sm:text-xl">{t("hero.lede")}</p>
           <p aria-live="polite" className="mx-auto mt-3 min-h-[2.9em] max-w-[44ch] text-[15px] font-medium text-muted-foreground">{hint}</p>
+          <div className="mt-2 flex flex-col items-center gap-2"><LinkBtn variant="ink" href="/app">{t("app.join")}</LinkBtn><p className="max-w-[40ch] text-xs text-muted-foreground">{t("app.note")}</p></div>
         </>
       }
     >

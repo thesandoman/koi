@@ -13,6 +13,9 @@ const EXTRA: Record<Lang, Record<string, string>> = {
     "never.mapTitle": "Only places, never people.",
     "never.mapBody": "The map shows public places. Nobody's location is ever on it, and counts are rounded and never live.",
     "foot.rights": "Koi · Bangkok",
+    "app.open": "Open the app",
+    "app.note": "Runs in your browser with sample people. It saves to this browser only.",
+    "app.join": "Open the live app",
   },
   th: {
     "tap.mutualSam": "แซมกับคุณเกี่ยวก้อยกันทั้งคู่",
@@ -25,6 +28,9 @@ const EXTRA: Record<Lang, Record<string, string>> = {
     "never.mapTitle": "มีแค่สถานที่ ไม่มีคน",
     "never.mapBody": "แผนที่แสดงเฉพาะสถานที่สาธารณะ ไม่มีตำแหน่งของใครอยู่บนนั้น ตัวเลขปัดเศษและไม่เรียลไทม์",
     "foot.rights": "Koi · กรุงเทพฯ",
+    "app.open": "เปิดแอป",
+    "app.note": "ทำงานในเบราว์เซอร์ด้วยคนตัวอย่าง บันทึกไว้ในเบราว์เซอร์นี้เท่านั้น",
+    "app.join": "เปิดแอปตัวจริง",
   },
 };
 

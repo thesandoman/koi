@@ -19,7 +19,13 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "output": "single",
+      "name": "Koi",
+      "shortName": "Koi",
+      "backgroundColor": "#14201B",
+      "themeColor": "#14201B"
     },
     "plugins": [
       "expo-font",
@@ -27,7 +33,8 @@
     ],
     "scheme": "koi",
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": true,
+      "baseUrl": "/app"
     }
   }
 }

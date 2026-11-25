@@ -20,6 +20,8 @@ const HEADERS = {
   "Permissions-Policy": "camera=(), microphone=(), geolocation=(), interest-cohort=()",
   "Strict-Transport-Security": "max-age=63072000; includeSubDomains",
 };
+// The app (react-native-web) injects its own <style> tags, so /app needs inline styles; everything else stays strict.
+const APP_CSP = HEADERS["Content-Security-Policy"].replace("style-src 'self'", "style-src 'self' 'unsafe-inline'").replace("img-src 'self' data:", "img-src 'self' data: blob:").replace("font-src 'self'", "font-src 'self' data:");
 const gzCache = new Map();
 
 async function readBody(req, limit = 16_384) {
@@ -55,8 +57,10 @@ async function serveFile(req, res, path) {
 }
 
 const server = createServer(async (req, res) => {
-  for (const [k, v] of Object.entries(HEADERS)) res.setHeader(k, v);
   const url = new URL(req.url, "http://x");
+  const inApp = url.pathname === "/app" || url.pathname.startsWith("/app/");
+  for (const [k, v] of Object.entries(HEADERS)) res.setHeader(k, v);
+  if (inApp) res.setHeader("Content-Security-Policy", APP_CSP);
   try {
     if (url.pathname === "/healthz") { res.setHeader("content-type", "text/plain"); return res.end("ok"); }
     if (url.pathname === "/api/waitlist") return await api(req, res);
@@ -68,7 +72,7 @@ const server = createServer(async (req, res) => {
     if (s?.isDirectory()) file = join(file, "index.html");
     else if (!s) {
       if (extname(url.pathname)) { res.statusCode = 404; return res.end("not found"); } // a missing file is a 404, never the page
-      file = join(root, "index.html"); // single-page site: unknown routes show the page
+      file = join(root, inApp ? join("app", "index.html") : "index.html"); // single-page: unknown routes show their page
     }
     return await serveFile(req, res, file);
   } catch {
