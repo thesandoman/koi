@@ -1,12 +1,12 @@
-import { useEffect, useState, type FormEvent } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { AREAS, DAY_ORDER, PARTS } from "@/data";
 import { useKoi } from "@/state";
 import { Btn, LinkBtn } from "@/components/ui/button";
 import { PhoneFrame, PhoneScrollHero } from "@/components/ui/phone";
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import { MapArt, MapScreen } from "@/components/map";
+import { MapScreen } from "@/components/map";
 import { CloseScreen, PlanScreen, TapScreen } from "@/components/screens";
 
 /* ---------- header ---------- */
@@ -44,7 +44,7 @@ export function Hero() {
           <h1 className="font-heading text-[clamp(3.25rem,11vw,6rem)] font-extrabold leading-[0.92] tracking-[-0.035em]">{t("hero.h1")}</h1>
           <p className="mx-auto mt-4 max-w-[34ch] text-lg text-foreground sm:text-xl">{t("hero.lede")}</p>
           <p aria-live="polite" className="mx-auto mt-3 min-h-[2.9em] max-w-[44ch] text-[15px] font-medium text-muted-foreground">{hint}</p>
-          <div className="mt-2 flex flex-col items-center gap-2"><LinkBtn variant="ink" href="/app">{t("app.join")}</LinkBtn><p className="max-w-[40ch] text-xs text-muted-foreground">{t("app.note")}</p></div>
+          <div className="mt-2 flex flex-col items-center gap-2"><LinkBtn variant="ink" href="/app">{t("app.join")}</LinkBtn><p className="max-w-[40ch] text-xs text-muted-foreground">{t("app.note")} {t("app.more")}</p></div>
         </>
       }
     >
@@ -74,27 +74,36 @@ function Toggle({ on, onChange, label }: { on: boolean; onChange: (v: boolean) =
 function HoursGrid() {
   const { s, dispatch, t, locale } = useKoi();
   const day = (wd: number, long = false) => new Intl.DateTimeFormat(locale, { weekday: long ? "long" : "short", timeZone: "UTC" }).format(new Date(Date.UTC(2024, 0, 7 + wd)));
+  const painting = useRef<boolean | null>(null);
+  const hours = useRef(s.hours);
+  hours.current = s.hours;
+  const set = (k: string, on: boolean) => { if (hours.current.includes(k) !== on) { dispatch({ type: "hour", key: k }); hours.current = on ? [...hours.current, k] : hours.current.filter((h) => h !== k); } };
+  useEffect(() => { const up = () => { painting.current = null; }; window.addEventListener("pointerup", up); window.addEventListener("pointercancel", up); return () => { window.removeEventListener("pointerup", up); window.removeEventListener("pointercancel", up); }; }, []);
   return (
-    <table className="border-separate border-spacing-1" aria-label={t("plan.p2")}>
-      <thead><tr><td />{PARTS.map((p) => <th key={p} scope="col" className="px-1 pb-1 text-xs font-semibold text-muted-foreground">{t(`day.${p}`)}</th>)}</tr></thead>
-      <tbody>
+    <div className="touch-none select-none" aria-label={t("plan.p2")}>
+      <div className="grid grid-cols-[3rem_repeat(3,4rem)] items-center gap-x-1 gap-y-2">
+        <span />
+        {PARTS.map((p) => <span key={p} className="text-center text-[11px] font-semibold text-muted-foreground">{t(`day.${p}`)}</span>)}
         {DAY_ORDER.map((wd) => (
-          <tr key={wd}>
-            <th scope="row" className="pr-2 text-left text-xs font-semibold text-muted-foreground">{day(wd)}</th>
+          <div key={wd} className="contents">
+            <span className="text-xs font-semibold text-muted-foreground">{day(wd)}</span>
             {PARTS.map((p) => {
               const k = `${wd}-${p}`;
               const on = s.hours.includes(k);
               return (
-                <td key={p}>
-                  <button type="button" aria-pressed={on} aria-label={`${day(wd, true)}, ${t(`day.${p}`)}`} onClick={() => dispatch({ type: "hour", key: k })}
-                    className={cn("h-11 w-16 rounded-xl border transition-colors duration-150", on ? "border-leaf bg-leaf" : "border-border bg-card hover:bg-muted")} />
-                </td>
+                <motion.button key={p} type="button" aria-pressed={on} aria-label={`${day(wd, true)}, ${t(`day.${p}`)}`} data-slot={k}
+                  animate={{ scale: on ? [0.7, 1] : 1 }} transition={{ type: "spring", stiffness: 420, damping: 12 }}
+                  onPointerDown={(e) => { (e.currentTarget as HTMLElement).releasePointerCapture?.(e.pointerId); painting.current = !on; set(k, !on); }}
+                  onPointerEnter={() => { if (painting.current !== null) set(k, painting.current); }}
+                  onClick={(e) => { if (e.detail === 0) set(k, !on); }}
+                  className={cn("size-11 justify-self-center rounded-full border-[1.5px] transition-colors duration-150", on ? "border-leaf bg-leaf" : "border-border bg-transparent hover:bg-muted")} />
               );
             })}
-          </tr>
+          </div>
         ))}
-      </tbody>
-    </table>
+      </div>
+      <p className="mt-3 text-xs text-muted-foreground">{t("hours.tip")}</p>
+    </div>
   );
 }
 
@@ -166,42 +175,44 @@ export function How() {
 
 /* ---------- never ---------- */
 const note = { hidden: { y: 16 }, show: { y: 0 } };
+const NEVER = [["never.big1", "never.i1d"], ["never.big2", "never.i2d"], ["never.big3", "never.i5d"], ["never.big4", "never.i4d"], ["never.mapTitle", "never.mapBody"]] as const;
+
+/** A wavy line that draws itself when it scrolls into view, like a koi leaving a wake. */
+function Wake() {
+  const reduce = useReducedMotion();
+  return (
+    <svg viewBox="0 0 300 14" preserveAspectRatio="none" className="mt-2 h-3 w-full max-w-sm" aria-hidden>
+      <motion.path d="M2 7 C 28 0, 52 14, 78 7 S 128 0, 154 7 S 204 14, 230 7 S 280 0, 298 7" fill="none" stroke="var(--leaf)" strokeWidth="3" strokeLinecap="round"
+        initial={reduce ? false : { pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true, margin: "-15% 0px" }} transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }} />
+    </svg>
+  );
+}
+
 export function Never() {
   const { t } = useKoi();
-  const big = "font-heading text-[clamp(2.25rem,5vw,3.75rem)] font-extrabold leading-[0.98] tracking-[-0.035em]";
   return (
     <section aria-labelledby="h-never" className="mx-auto max-w-6xl px-5 py-28">
       <h2 id="h-never" className="max-w-[18ch] text-[clamp(2rem,4.8vw,3.5rem)] font-bold leading-[1.02] tracking-[-0.03em]">{t("never.h2")}</h2>
-      <div className="mt-12 grid gap-4 lg:grid-cols-6 lg:auto-rows-[minmax(13rem,auto)]">
-        <div className="flex flex-col gap-5 rounded-[2rem] bg-muted p-7 lg:col-span-3 lg:row-span-2">
-          <p className="text-sm font-semibold text-muted-foreground">{t("never.lockcap")}</p>
-          <motion.ul initial="hidden" whileInView="show" viewport={{ once: true, margin: "-20% 0px" }} transition={{ staggerChildren: 0.14 }} className="mt-auto flex flex-col gap-3">
+      <div className="mt-14 grid gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,20rem)]">
+        <ul className="flex flex-col gap-12">
+          {NEVER.map(([big, small]) => (
+            <li key={big}>
+              <p className="font-heading text-[clamp(2.25rem,6vw,4.5rem)] font-extrabold leading-[0.98] tracking-[-0.035em]">{t(big)}</p>
+              <Wake />
+              <p className="mt-3 max-w-[40ch] text-[17px] text-muted-foreground">{t(small)}</p>
+            </li>
+          ))}
+        </ul>
+        <div className="lg:pt-4">
+          <p className="mb-4 text-sm font-semibold text-muted-foreground">{t("never.lockcap")}</p>
+          <motion.ul initial="hidden" whileInView="show" viewport={{ once: true, margin: "-20% 0px" }} transition={{ staggerChildren: 0.14 }} className="flex flex-col gap-3">
             {["never.n1", "never.n2", "never.n3"].map((k) => (
-              <motion.li key={k} variants={note} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }} className="rounded-2xl bg-card p-4 shadow-[0_1px_2px_rgb(0_0_0/.06),0_10px_24px_-14px_rgb(0_0_0/.3)]">
+              <motion.li key={k} variants={note} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }} className="rounded-2xl bg-muted p-4">
                 <p className="text-xs font-semibold text-muted-foreground">{t("never.n1t")}</p>
                 <p className="text-[17px] font-semibold">{t(k)}</p>
               </motion.li>
             ))}
           </motion.ul>
-        </div>
-        <div className="flex flex-col justify-between gap-6 rounded-[2rem] border border-border bg-card p-7 lg:col-span-3">
-          <p className={big}>{t("never.big1")}</p><p className="max-w-[36ch] text-muted-foreground">{t("never.i1d")}</p>
-        </div>
-        <div className="flex flex-col justify-between gap-6 rounded-[2rem] bg-foreground p-7 text-background lg:col-span-3">
-          <p className={big}>{t("never.big2")}</p><p className="max-w-[36ch] opacity-75">{t("never.i2d")}</p>
-        </div>
-        <div className="flex flex-col overflow-hidden rounded-[2rem] border border-border bg-card lg:col-span-2">
-          <div className="relative h-44 shrink-0 border-b border-border"><MapArt labels={false} /></div>
-          <div className="p-7">
-            <p className="font-heading text-xl font-bold leading-tight">{t("never.mapTitle")}</p>
-            <p className="mt-1.5 text-sm text-muted-foreground">{t("never.mapBody")}</p>
-          </div>
-        </div>
-        <div className="flex flex-col justify-between gap-6 rounded-[2rem] bg-leaf-soft p-7 lg:col-span-2">
-          <p className={big}>{t("never.big3")}</p><p className="max-w-[30ch] text-muted-foreground">{t("never.i5d")}</p>
-        </div>
-        <div className="flex flex-col justify-between gap-6 rounded-[2rem] border border-border bg-card p-7 lg:col-span-2">
-          <p className={cn(big, "text-[clamp(1.9rem,3.6vw,2.75rem)]")}>{t("never.big4")}</p><p className="max-w-[30ch] text-muted-foreground">{t("never.i4d")}</p>
         </div>
       </div>
     </section>

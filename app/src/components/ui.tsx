@@ -1,5 +1,6 @@
 import { useMemo, type ReactNode } from "react";
-import { Platform, Pressable, ScrollView, StyleSheet, Text, View, type StyleProp, type TextStyle, type ViewStyle } from "react-native";
+import { AccessibilityInfo, PixelRatio, Platform, Pressable, ScrollView, StyleSheet, Text, View, type StyleProp, type TextStyle, type ViewStyle } from "react-native";
+import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
 import { fonts, MIN_TAP, radius, useColors } from "@/theme";
@@ -17,7 +18,7 @@ export function T({ v = "body", muted, children, style, ...p }: { v?: Variant; m
   const family = v === "display" ? f.display : v === "title" ? f.head : v === "label" ? f.semi : f.body;
   const th = s.lang === "th";
   return (
-    <Text {...p} style={[{ color: muted ? c.body : c.ink, fontFamily: family, ...size[v], lineHeight: size[v].lineHeight + (th ? 5 : 0), letterSpacing: v === "display" && !th ? -1.2 : 0 }, style]}>
+    <Text {...p} maxFontSizeMultiplier={1.6} style={[{ color: muted ? c.body : c.ink, fontFamily: family, ...size[v], lineHeight: Math.round((size[v].lineHeight + (th ? 5 : 0)) * Math.min(PixelRatio.getFontScale(), 1.6)), letterSpacing: v === "display" && !th ? -1.2 : 0 }, style]}>
       {children}
     </Text>
   );
@@ -74,3 +75,42 @@ export const hap = (kind: "light" | "success") => {
   (kind === "success" ? Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success) : Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)).catch(() => {});
 };
 export const useStyles = () => useMemo(() => StyleSheet.create({ row: { flexDirection: "row", gap: 8, flexWrap: "wrap" } }), []);
+
+/** True when the user asked the system to reduce motion; also true while we can't tell yet. */
+export function useReducedMotion(): boolean {
+  const [r, setR] = useState(false);
+  useEffect(() => {
+    AccessibilityInfo.isReduceMotionEnabled().then(setR).catch(() => {});
+    const sub = AccessibilityInfo.addEventListener("reduceMotionChanged", setR);
+    return () => sub.remove();
+  }, []);
+  return r;
+}
+
+export function useScreenReader(): boolean {
+  const [r, setR] = useState(false);
+  useEffect(() => {
+    AccessibilityInfo.isScreenReaderEnabled().then(setR).catch(() => {});
+    const sub = AccessibilityInfo.addEventListener("screenReaderChanged", setR);
+    return () => sub.remove();
+  }, []);
+  return r;
+}
+
+/** A quiet text action: no box, underlined, still a 48pt target. */
+export function LinkText({ label, onPress, tone = "ink" }: { label: string; onPress: () => void; tone?: "ink" | "rose" | "muted" }) {
+  const c = useColors();
+  const { s } = useKoi();
+  const color = tone === "rose" ? c.rose : tone === "muted" ? c.body : c.ink;
+  return (
+    <Pressable accessibilityRole="button" accessibilityLabel={label} onPress={onPress} hitSlop={6} style={{ minHeight: 48, justifyContent: "center", alignSelf: "flex-start" }}>
+      <Text maxFontSizeMultiplier={1.6} style={{ color, fontFamily: fonts[s.lang].semi, fontSize: 16, textDecorationLine: "underline" }}>{label}</Text>
+    </Pressable>
+  );
+}
+
+/** A thin rule that separates sections instead of a box. */
+export function Rule() {
+  const c = useColors();
+  return <View accessibilityElementsHidden importantForAccessibility="no" style={{ height: 1, backgroundColor: c.line, marginVertical: 8 }} />;
+}

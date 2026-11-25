@@ -9,7 +9,8 @@ import { sharedPlaceKeys } from "@/lib/shared";
 import { fmtTime } from "@/lib/format";
 import { fonts, radius, useColors } from "@/theme";
 import { useKoi } from "@/engine/store";
-import { Btn, Card, Chip, Private, T } from "@/components/ui";
+import { Btn, LinkText, Rule, T } from "@/components/ui";
+import { HoldPinky } from "@/components/HoldPinky";
 import { ArrowLeftIcon, CheckIcon } from "@/components/icons";
 
 export default function PlanSpace() {
@@ -19,16 +20,16 @@ export default function PlanSpace() {
   const router = useRouter();
   const [text, setText] = useState("");
   const [note, setNote] = useState("");
-  const [menu, setMenu] = useState<null | "kindly" | "block">(null);
+  const [menu, setMenu] = useState<null | "open" | "kindly" | "block">(null);
   const pk = s.pinkies.find((p) => p.id === id);
   const p = pk ? personById.get(pk.personId) : undefined;
 
   // Outsiders and ended plans get a plain not-found, never a hint of why.
   if (!pk || !p || pk.status !== "active") {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: c.bg, padding: 20, gap: 16 }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: c.bg, padding: 24, gap: 16 }}>
         <T v="title">{t("close.closed")}</T>
-        <Btn label={t("common.back")} onPress={() => router.replace("/plans")} />
+        <LinkText label={t("common.back")} onPress={() => router.replace("/plans")} />
       </SafeAreaView>
     );
   }
@@ -41,6 +42,7 @@ export default function PlanSpace() {
   const canChat = chatAllowed({ planHasPlaceAndTime: hasPlan, mySentBeforePlan: mine, extraGranted: pk.moreGranted });
   const view = closeView(pk, now());
   const late = pk.startsAt ? Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hour12: false, timeZone: "Asia/Bangkok" }).format(new Date(pk.startsAt))) >= 22 : false;
+  const chosen = pk.venueKey ? venueByKey.get(pk.venueKey) : undefined;
 
   const submit = () => {
     const r = send(pk.id, text);
@@ -48,77 +50,94 @@ export default function PlanSpace() {
     setNote(t(r.reason === "limit" ? "chat.limit" : r.reason === "link" ? "chat.nudge.link" : r.reason === "contact" ? "chat.nudge.contact" : r.reason === "money" ? "chat.nudge.money" : "chat.long"));
   };
   const ans = (a: CloseAnswer) => answer(pk.id, a);
+  const f = fonts[s.lang];
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: c.bg }}>
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
-        <ScrollView contentContainerStyle={{ padding: 20, gap: 16, paddingBottom: 40 }} keyboardShouldPersistTaps="handled">
-          <Pressable accessibilityRole="button" onPress={() => router.back()} style={{ minHeight: 44, justifyContent: "center" }}><View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}><ArrowLeftIcon color={c.body} /><T muted>{t("common.back")}</T></View></Pressable>
-          <T v="display" style={{ fontSize: 32, lineHeight: 36 }} accessibilityRole="header">{t("plans.with", { name })}</T>
+        <ScrollView contentContainerStyle={{ padding: 24, gap: 18, paddingBottom: 60 }} keyboardShouldPersistTaps="handled">
+          <Pressable accessibilityRole="button" accessibilityLabel={t("common.back")} onPress={() => router.back()} style={{ minHeight: 48, justifyContent: "center", alignSelf: "flex-start" }}>
+            <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}><ArrowLeftIcon color={c.body} /><T muted>{t("common.back")}</T></View>
+          </Pressable>
 
-          <Card>
-            <T v="label" muted>{t("plan.place")}</T>
-            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-              {options.map((v) => <Chip key={v.key} label={venueName(v, s.lang)} on={pk.venueKey === v.key} onPress={() => place(pk.id, v.key)} />)}
-            </View>
-            {shared.length > 0 && pk.venueKey && <T v="small" muted>{t("plan.shared", { place: venueName(venueByKey.get(pk.venueKey)!, s.lang) })}</T>}
-            {shared.length === 0 && <T v="small" muted>{t("plan.noShared")}</T>}
-            <T v="label" muted>{t("plan.time")}</T>
-            <T v="title">{pk.startsAt ? fmtTime(pk.startsAt, s.lang) : t("plan.noTime")}</T>
+          <T v="small" muted>{t("plans.with", { name })}</T>
+          <View style={{ gap: 4 }}>
+            <T v="display" accessibilityRole="header">{chosen ? venueName(chosen, s.lang) : t("plan.choose")}</T>
+            <T v="title" style={{ color: c.leaf }}>{pk.startsAt ? fmtTime(pk.startsAt, s.lang) : t("plan.noTime")}</T>
             {late && <T v="small" muted>{t("plan.late")}</T>}
-            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
-              {!pk.confMe ? <Btn variant="primary" label={t("plan.confirm")} disabled={!hasPlan} onPress={() => confirm(pk.id)} /> : <View style={{ flexDirection: "row", gap: 6, alignItems: "center" }}><CheckIcon color={c.leaf} /><T style={{ color: c.leaf, fontFamily: fonts[s.lang].semi }}>{t("plan.you")}</T></View>}
-              {pk.confThem && <View style={{ flexDirection: "row", gap: 6, alignItems: "center" }}><CheckIcon color={c.leaf} /><T style={{ color: c.leaf, fontFamily: fonts[s.lang].semi }}>{t("plan.them", { name })}</T></View>}
-            </View>
-            {both ? <T v="label" style={{ color: c.leaf }}>{t("plan.both")}</T> : pk.cleared ? <T v="small" muted>{t("plan.cleared")}</T> : null}
-            <Private><T v="small">{t("plan.safety")}</T></Private>
-            {hasPlan && <Btn variant="quiet" label={t("plan.share")} onPress={() => Share.share({ message: `${venueName(venueByKey.get(pk.venueKey!)!, "en")} · ${fmtTime(pk.startsAt!, "en")}` }).catch(() => {})} />}
-          </Card>
+          </View>
 
-          {(view === "ask" || view === "waiting") && (
-            <Card>
-              {view === "ask" ? (
-                <>
-                  <T v="title">{t("close.ask", { name })}</T>
-                  <Btn variant="ink" label={t("close.yes")} onPress={() => ans("yes")} />
-                  <Btn label={t("close.no")} onPress={() => ans("no")} />
-                  <Btn label={t("close.didnt")} onPress={() => ans("didnt_meet")} />
-                </>
-              ) : <T>{t("close.wait")}</T>}
-            </Card>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", columnGap: 18 }}>
+            {options.map((v) => {
+              const on = pk.venueKey === v.key;
+              return (
+                <Pressable key={v.key} accessibilityRole="button" accessibilityState={{ selected: on }} onPress={() => place(pk.id, v.key)} style={{ minHeight: 44, justifyContent: "center" }}>
+                  <T style={{ color: on ? c.leaf : c.body, fontFamily: on ? f.semi : f.body, textDecorationLine: on ? "underline" : "none" }}>{venueName(v, s.lang)}</T>
+                </Pressable>
+              );
+            })}
+          </View>
+          <T v="small" muted>{shared.length > 0 && chosen ? t("plan.shared", { place: venueName(chosen, s.lang) }) : t("plan.noShared")}</T>
+
+          {!pk.confMe ? (
+            <View style={{ alignItems: "center", opacity: hasPlan ? 1 : 0.4 }} pointerEvents={hasPlan ? "auto" : "none"}>
+              <HoldPinky tone="leaf" name={chosen ? venueName(chosen, s.lang) : name} label={t("plan.confirm")} hint={t("hold.seal")} done={t("hold.sealed")} onComplete={() => confirm(pk.id)} />
+            </View>
+          ) : (
+            <View style={{ gap: 6 }}>
+              <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}><CheckIcon color={c.leaf} /><T style={{ color: c.leaf, fontFamily: f.semi }}>{t("plan.you")}</T></View>
+              {pk.confThem && <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}><CheckIcon color={c.leaf} /><T style={{ color: c.leaf, fontFamily: f.semi }}>{t("plan.them", { name })}</T></View>}
+              {both && <T v="title" style={{ color: c.leaf }}>{t("plan.both")}</T>}
+            </View>
           )}
+          {pk.cleared && !both && <T v="small" muted>{t("plan.cleared")}</T>}
+          <T v="small" muted>{t("plan.safety")}</T>
+          {hasPlan && <LinkText label={t("plan.share")} onPress={() => Share.share({ message: `${venueName(chosen!, "en")} · ${fmtTime(pk.startsAt!, "en")}` }).catch(() => {})} />}
 
-          <Card>
-            <T v="title">{t("chat.h")}</T>
-            {pk.messages.length === 0 && <T muted>{t("chat.empty")}</T>}
-            {pk.messages.map((m) => (
-              <View key={m.id} style={{ alignSelf: m.from === "me" ? "flex-end" : "flex-start", maxWidth: "85%", backgroundColor: m.from === "me" ? c.ink : c.bg2, borderRadius: radius.md, paddingHorizontal: 14, paddingVertical: 10 }}>
-                <T style={{ color: m.from === "me" ? c.bg : c.ink }}>{m.body}</T>
+          {(view === "ask" || view === "waiting") && (<><Rule />
+            {view === "ask" ? (
+              <View style={{ gap: 2 }}>
+                <T v="display" style={{ fontSize: 28, lineHeight: 32 }}>{t("close.ask", { name })}</T>
+                <View style={{ flexDirection: "row", flexWrap: "wrap", columnGap: 22 }}>
+                  <LinkText label={t("close.yes")} onPress={() => ans("yes")} /><LinkText label={t("close.no")} onPress={() => ans("no")} tone="muted" /><LinkText label={t("close.didnt")} onPress={() => ans("didnt_meet")} tone="muted" />
+                </View>
               </View>
-            ))}
-            {!canChat && (<><T v="small" muted>{t("chat.limit")}</T>{!pk.moreGranted && <Btn variant="quiet" label={t("chat.more")} onPress={() => more(pk.id)} />}</>)}
-            {note ? <T v="small" style={{ color: c.rose }}>{note}</T> : null}
-            <View style={{ flexDirection: "row", gap: 8 }}>
-              <TextInput value={text} onChangeText={setText} placeholder={t("chat.placeholder")} placeholderTextColor={c.body} accessibilityLabel={t("chat.placeholder")} editable={canChat}
-                style={{ flex: 1, minHeight: 48, borderWidth: 1, borderColor: c.line, borderRadius: radius.full, paddingHorizontal: 16, color: c.ink, backgroundColor: c.card, fontFamily: fonts[s.lang].body, fontSize: 16 }} onSubmitEditing={submit} />
-              <Btn variant="ink" label={t("chat.send")} disabled={!canChat || !text.trim()} onPress={submit} />
-            </View>
-          </Card>
+            ) : <T>{t("close.wait")}</T>}
+          </>)}
 
-          <Card>
-            <T v="title">{t("ways.h")}</T>
-            <Btn label={t("ways.friends")} onPress={() => { friends(pk.id); router.replace("/plans"); }} />
-            {menu === "kindly" ? (
-              <View style={{ gap: 8 }}>
-                <T v="small" muted>{t("ways.pick")}</T>
-                {(Object.keys(END_KINDLY) as (keyof typeof END_KINDLY)[]).map((k) => <Btn key={k} label={t(`end.${k}`)} onPress={() => { kindly(pk.id); router.replace("/plans"); }} />)}
-              </View>
-            ) : <Btn label={t("ways.kindly")} onPress={() => setMenu("kindly")} />}
-            <View style={{ flexDirection: "row", gap: 8 }}>
-              <Btn style={{ flex: 1 }} variant="quiet" label={t("ways.report")} onPress={() => { report(p.id); setNote(t("ways.reported")); }} />
-              {menu === "block" ? <Btn style={{ flex: 1 }} variant="ink" label={t("ways.blockConfirm", { name })} onPress={() => { block(pk.id); router.replace("/plans"); }} /> : <Btn style={{ flex: 1 }} variant="quiet" label={t("ways.block")} onPress={() => setMenu("block")} />}
+          <Rule />
+          <T v="title">{t("chat.h")}</T>
+          {pk.messages.length === 0 && <T muted>{t("chat.empty")}</T>}
+          {pk.messages.map((m) => (
+            <View key={m.id} style={{ alignSelf: m.from === "me" ? "flex-end" : "flex-start", maxWidth: "85%", backgroundColor: m.from === "me" ? c.ink : c.bg2, borderRadius: 22, paddingHorizontal: 16, paddingVertical: 10 }}>
+              <T style={{ color: m.from === "me" ? c.bg : c.ink }}>{m.body}</T>
             </View>
-          </Card>
+          ))}
+          {!canChat && (<><T v="small" muted>{t("chat.limit")}</T>{!pk.moreGranted && <LinkText label={t("chat.more")} onPress={() => more(pk.id)} />}</>)}
+          {note ? <T v="small" style={{ color: c.rose }}>{note}</T> : null}
+          <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
+            <TextInput value={text} onChangeText={setText} placeholder={t("chat.placeholder")} placeholderTextColor={c.body} accessibilityLabel={t("chat.placeholder")} editable={canChat}
+              style={{ flex: 1, minHeight: 48, borderRadius: radius.full, paddingHorizontal: 18, color: c.ink, backgroundColor: c.bg2, fontFamily: f.body, fontSize: 16 }} onSubmitEditing={submit} />
+            <Btn variant="ink" label={t("chat.send")} disabled={!canChat || !text.trim()} onPress={submit} />
+          </View>
+
+          <Rule />
+          {menu === null && <LinkText label={t("ways.h")} tone="muted" onPress={() => setMenu("open")} />}
+          {menu === "open" && (
+            <View>
+              <LinkText label={t("ways.friends")} onPress={() => { friends(pk.id); router.replace("/plans"); }} />
+              <LinkText label={t("ways.kindly")} onPress={() => setMenu("kindly")} />
+              <LinkText label={t("ways.report")} tone="muted" onPress={() => { report(p.id); setNote(t("ways.reported")); }} />
+              <LinkText label={t("ways.block")} tone="muted" onPress={() => setMenu("block")} />
+            </View>
+          )}
+          {menu === "kindly" && (
+            <View>
+              <T v="small" muted>{t("ways.pick")}</T>
+              {(Object.keys(END_KINDLY) as (keyof typeof END_KINDLY)[]).map((k) => <LinkText key={k} label={t(`end.${k}`)} onPress={() => { kindly(pk.id); router.replace("/plans"); }} />)}
+            </View>
+          )}
+          {menu === "block" && (<View><T>{t("ways.blockConfirm", { name })}</T><LinkText label={t("ways.block")} tone="rose" onPress={() => { block(pk.id); router.replace("/plans"); }} /><LinkText label={t("common.cancel")} tone="muted" onPress={() => setMenu("open")} /></View>)}
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

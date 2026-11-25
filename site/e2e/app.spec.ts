@@ -1,5 +1,16 @@
 import { expect, test, type Page } from "@playwright/test";
 
+/** Press and hold an element long enough to complete a hold-to-confirm control. */
+async function hold(page: Page, name: RegExp | string) {
+  const el = page.getByRole("button", { name }).first();
+  await el.scrollIntoViewIfNeeded();
+  const box = (await el.boundingBox())!;
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.waitForTimeout(1100);
+  await page.mouse.up();
+}
+
 /** Collects every failed same-origin request and every console error, so a missing file can never hide behind a blank page. */
 function watch(page: Page) {
   const problems: string[] = [];
@@ -45,7 +56,7 @@ test("the whole flow works: onboarding, private hook, unlock, plan, chat nudge, 
 
   // The hook is private: after tapping, only "your pinky is out" is shown.
   await expect(page.getByText("Today's introductions")).toBeVisible();
-  await page.getByRole("button", { name: "Hook pinkies" }).first().click();
+  await hold(page, /Hook pinkies Mint/);
   await expect(page.getByText("Your pinky is out.")).toBeVisible();
   await expect(page.getByText("both hooked pinkies")).toHaveCount(0);
 
@@ -58,9 +69,31 @@ test("the whole flow works: onboarding, private hook, unlock, plan, chat nudge, 
   await expect(page.getByText("Plan with Mint")).toBeVisible();
   // One of the three shared places is proposed (the pick is seeded per plan, so it varies).
   await expect(page.getByText(/You both pinned (Lumphini Park|Or Tor Kor Market|Yaowarat street food)\./)).toBeVisible();
-  await page.getByRole("button", { name: "Confirm this plan" }).click();
+  await hold(page, /Confirm this plan/);
   await page.getByRole("textbox", { name: "Message" }).fill("https://example.com");
   await page.getByRole("button", { name: "Send" }).click();
   await expect(page.getByText("Links aren't sent in Koi.")).toBeVisible();
   expect(problems, problems.join("\n")).toEqual([]);
+});
+
+test("the website demo: hold to hook, then paint free times", async ({ page }) => {
+  await page.goto("/");
+  // Pin three places on the demo map, then hold the pinky ring to hook (a plain click must not complete it).
+  for (const place of ["Lumphini Park", "Or Tor Kor Market", "Yaowarat street food"]) await page.getByRole("button", { name: `Pin ${place}` }).first().click();
+  const ring = page.getByRole("button", { name: "Hook pinkies" }).first();
+  await ring.scrollIntoViewIfNeeded();
+  await ring.click();
+  await expect(page.getByText("Hold it down, or click twice").locator("visible=true")).toBeVisible();
+  await hold(page, "Hook pinkies");
+  await expect(page.getByText("Your pinky is out.").locator("visible=true")).toBeVisible();
+  // Drag across the Saturday dots to paint them.
+  const a = page.locator('[data-slot="6-a"]'), e = page.locator('[data-slot="6-e"]');
+  await a.scrollIntoViewIfNeeded();
+  const ba = (await a.boundingBox())!, be = (await e.boundingBox())!;
+  await page.mouse.move(ba.x + ba.width / 2, ba.y + ba.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(be.x + be.width / 2, be.y + be.height / 2, { steps: 8 });
+  await page.mouse.up();
+  await expect(a).toHaveAttribute("aria-pressed", "true");
+  await expect(e).toHaveAttribute("aria-pressed", "true");
 });

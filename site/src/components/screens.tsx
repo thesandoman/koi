@@ -5,6 +5,7 @@ import { VENUES, venueById } from "@/data";
 import { fmtTime, useKoi } from "@/state";
 import { Btn } from "@/components/ui/button";
 import { Ripple } from "@/components/map";
+import { HoldPinky } from "@/components/HoldPinky";
 import { goTo } from "@/lib/scroll";
 
 const Screen = ({ children, className }: { children: ReactNode; className?: string }) => (
@@ -94,7 +95,7 @@ export function TapScreen({ viewer }: { viewer: "you" | "sam" }) {
     <Screen>
       <Profile who={viewer === "you" ? "sam" : "you"} />
       <Private>{t("tap.private")}</Private>
-      <Btn variant="primary" onClick={hook}>{t("tap.hook")}</Btn>
+      <div className="py-1"><HoldPinky label={t("tap.hook")} hint={t("hold.hook")} done={t("hold.hooked")} onComplete={hook} /></div>
       {other && <p role="status" className="text-[13px] font-semibold">{t("tap.unchanged")}</p>}
     </Screen>
   );

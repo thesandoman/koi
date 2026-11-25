@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { VENUES } from "@/data";
 import { useKoi } from "@/state";
@@ -19,7 +19,28 @@ export function Ripple({ x, y, tone = "leaf" }: { x: string; y: string; tone?: "
   );
 }
 
-export function MapArt({ labels = true }: { labels?: boolean }) {
+// Points down the river (500 x 700 space) so a koi can swim along it.
+const SEGS: [number, number][][] = [[[150, 0], [172, 120], [120, 220], [140, 330]], [[140, 330], [160, 440], [90, 470], [140, 560]], [[140, 560], [190, 650], [212, 650], [190, 700]]];
+const bez = (p: [number, number][], t: number): [number, number] => { const u = 1 - t; return [u * u * u * p[0][0] + 3 * u * u * t * p[1][0] + 3 * u * t * t * p[2][0] + t * t * t * p[3][0], u * u * u * p[0][1] + 3 * u * u * t * p[1][1] + 3 * u * t * t * p[2][1] + t * t * t * p[3][1]]; };
+const PTS: [number, number][] = [...SEGS.flatMap((sg) => Array.from({ length: 10 }, (_, i) => bez(sg, i / 10))), [190, 700]];
+const ANG = PTS.map((p, i) => { const q = PTS[Math.min(i + 1, PTS.length - 1)], o = PTS[Math.max(i - 1, 0)]; return (Math.atan2(q[1] - o[1], q[0] - o[0]) * 180) / Math.PI; });
+
+function Koi({ seconds, reverse, delay }: { seconds: number; reverse?: boolean; delay: number }) {
+  const pts = reverse ? [...PTS].reverse() : PTS;
+  const ang = reverse ? [...ANG].reverse().map((a) => a + 180) : ANG;
+  return (
+    <motion.g initial={false} animate={{ x: pts.map((p, i) => p[0] + Math.sin(i * 0.7) * 4), y: pts.map((p) => p[1]), rotate: ang }}
+      transition={{ duration: seconds, delay, ease: "easeInOut", repeat: Infinity, repeatDelay: 2 }}>
+      <path d="M-18 0 L-9 -7 L-9 7 Z" fill="var(--leaf)" opacity="0.8" />
+      <path d="M-12 0 C-6 -10 10 -9 18 0 C10 9 -6 10 -12 0 Z" fill="var(--card)" stroke="var(--leaf)" strokeWidth="1.5" />
+      <path d="M-4 -4 C0 -6 4 -5 6 -2 C2 -1 -2 -1 -4 -4 Z" fill="var(--leaf)" opacity="0.55" />
+      <circle cx="12" cy="-2" r="1.4" fill="var(--ink)" />
+    </motion.g>
+  );
+}
+
+export function MapArt({ labels = true, koi = false }: { labels?: boolean; koi?: boolean }) {
+  const reduce = useReducedMotion();
   return (
     <svg viewBox="0 0 500 700" className="absolute inset-0 size-full" aria-hidden focusable="false" preserveAspectRatio="xMidYMid slice">
       <g className="fill-leaf-soft">
@@ -31,6 +52,7 @@ export function MapArt({ labels = true }: { labels?: boolean }) {
         <path d="M20 470 C120 450 220 440 320 446" /><path d="M300 150 C360 150 420 140 500 110" />
       </g>
       <path id="river" d="M150 0 C172 120 120 220 140 330 S90 470 140 560 S212 650 190 700" fill="none" className="stroke-muted-foreground/25" strokeWidth="40" strokeLinecap="round" />
+      {koi && !reduce && <g aria-hidden><Koi seconds={22} delay={0} /><Koi seconds={30} delay={5} reverse /></g>}
       {labels && (
         <g className="fill-muted-foreground" fontFamily="Inter Koi, Noto Thai Koi, sans-serif" fontWeight="600">
           <text fontSize="13" letterSpacing="2.2"><textPath href="#river" startOffset="45%">Chao Phraya</textPath></text>
@@ -80,7 +102,7 @@ export function MapScreen() {
 
       <div className="relative min-h-0 flex-1 overflow-hidden rounded-3xl border border-border bg-card" role="group" aria-label={t("map.title")}>
         <div className="absolute inset-0 m-auto aspect-[500/700] h-full max-w-full">
-          <MapArt />
+          <MapArt koi />
           {ripples.map((r) => <Ripple key={r.id} x={r.x} y={r.y} />)}
           {VENUES.map((v) => {
             const on = s.pins.includes(v.id);
