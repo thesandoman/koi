@@ -7,9 +7,10 @@ import { cn } from "@/lib/utils";
 
 const useIsoLayoutEffect = typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
 
-export function PhoneFrame({ children, className }: { children?: React.ReactNode; className?: string }) {
+export function PhoneFrame({ children, className, size = "fit" }: { children?: React.ReactNode; className?: string; size?: "fit" | "hero" }) {
   return (
-    <div className={cn("relative mx-auto aspect-[9/19.5] w-[max(13.8rem,min(86vw,calc(min(40rem,100dvh-9.5rem)*0.4615)))]", className)}>
+    <div className={cn("relative mx-auto aspect-[9/19.5]",
+      size === "hero" ? "w-[min(86vw,19.5rem)]" : "w-[max(13.8rem,min(86vw,calc(min(40rem,100dvh-9.5rem)*0.4615)))]", className)}>
       <span aria-hidden className="absolute -left-[2px] top-[16%] h-7 w-[3px] rounded-l-sm bg-muted-foreground/40" />
       <span aria-hidden className="absolute -left-[2px] top-[24%] h-11 w-[3px] rounded-l-sm bg-muted-foreground/40" />
       <span aria-hidden className="absolute -right-[2px] top-[22%] h-14 w-[3px] rounded-r-sm bg-muted-foreground/40" />

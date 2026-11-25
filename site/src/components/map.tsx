@@ -90,7 +90,7 @@ export function MapScreen() {
                 aria-label={t(on ? "map.unpin" : "map.pin", { name: name(v) })}
                 className="group absolute z-10 grid h-11 w-11 -translate-x-1/2 -translate-y-full place-items-end justify-center pb-0.5"
                 style={{ left: `${(v.x / 500) * 100}%`, top: `${(v.y / 700) * 100}%` }}>
-                <span className={cn("pointer-events-none absolute bottom-full left-1/2 z-20 mb-0.5 -translate-x-1/2 whitespace-nowrap rounded-md bg-foreground px-1.5 py-0.5 text-[10px] font-semibold text-background transition-opacity",
+                <span className={cn("pointer-events-none absolute bottom-full left-1/2 z-20 mb-0.5 -translate-x-1/2 whitespace-nowrap rounded-md bg-foreground px-1.5 py-0.5 text-[11px] font-semibold text-background transition-opacity",
                   on ? "opacity-100" : "opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100")}>{name(v)}</span>
                 <span className={cn(both && "[&_path]:fill-primary [&_path]:stroke-primary [&_circle]:fill-card")}><PinGlyph on={on} /></span>
               </button>

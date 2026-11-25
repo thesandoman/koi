@@ -42,6 +42,11 @@ function Profile({ who }: { who: "sam" | "you" }) {
   );
 }
 
+const Check = () => (
+  <svg viewBox="0 0 16 16" aria-hidden className="size-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8.5l3.2 3.2L13 4.8" /></svg>
+);
+const Done = ({ children }: { children: ReactNode }) => <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-leaf"><Check />{children}</span>;
+
 const Private = ({ children }: { children: ReactNode }) => (
   <p className="rounded-2xl border border-dashed border-leaf bg-leaf-soft px-3.5 py-3 text-[13px] text-foreground">{children}</p>
 );
@@ -123,12 +128,12 @@ export function PlanScreen() {
         <p className="text-[17px] font-semibold leading-snug">{when ? fmtTime(when, locale) : t("plan.noTime")}</p>
       </div>
       <div className="flex flex-wrap items-center gap-2">
-        {s.confYou ? <span className="text-sm font-semibold text-leaf">✓ {t("plan.you")}</span>
+        {s.confYou ? <Done>{t("plan.you")}</Done>
           : <Btn variant="primary" disabled={!ready} onClick={() => dispatch({ type: "confYou" })}>{t("plan.confirm")}</Btn>}
-        {s.confSam ? <span className="text-sm font-semibold text-leaf">✓ {t("plan.sam")}</span>
+        {s.confSam ? <Done>{t("plan.sam")}</Done>
           : <Btn variant="plain" disabled={!ready} onClick={() => dispatch({ type: "confSam" })}>{t("plan.samConfirm")}</Btn>}
       </div>
-      <p role="status" className="min-h-5 text-[13px] font-semibold">{both ? `✓ ${t("plan.both")}` : s.cleared ? t("plan.cleared") : ""}</p>
+      <p role="status" className="min-h-5 text-[13px] font-semibold">{both ? <Done>{t("plan.both")}</Done> : s.cleared ? t("plan.cleared") : ""}</p>
       <Private>{t("plan.safety")}</Private>
       {typeof navigator !== "undefined" && "share" in navigator && ready && (
         <Btn variant="quiet" onClick={() => navigator.share({ text: `${venueById(s.place!).en} · ${fmtTime(when!, locale)}` }).catch(() => {})}>{t("plan.share")}</Btn>

@@ -46,7 +46,12 @@ export function Hero() {
         </>
       }
     >
-      <PhoneFrame><MapScreen /></PhoneFrame>
+      <div className="relative">
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 -z-10 flex h-[44rem] justify-center overflow-hidden">
+          {[34, 52, 72].map((r) => <span key={r} className="absolute top-[18rem] -translate-y-1/2 rounded-full border border-border/70" style={{ width: `${r}rem`, height: `${r}rem` }} />)}
+        </div>
+        <PhoneFrame size="hero"><MapScreen /></PhoneFrame>
+      </div>
       <p className="mx-auto mt-6 max-w-[40ch] text-center text-sm text-muted-foreground">{t("map.fine")}</p>
     </PhoneScrollHero>
   );
@@ -183,11 +188,11 @@ export function Never() {
         <div className="flex flex-col justify-between gap-6 rounded-[2rem] bg-foreground p-7 text-background lg:col-span-3">
           <p className={big}>{t("never.big2")}</p><p className="max-w-[36ch] opacity-75">{t("never.i2d")}</p>
         </div>
-        <div className="relative flex min-h-[18rem] flex-col justify-end gap-2 overflow-hidden rounded-[2rem] border border-border bg-card p-7 lg:col-span-2">
-          <div className="absolute inset-0 opacity-90"><MapArt labels={false} /></div>
-          <div className="relative rounded-2xl bg-card/95 p-4">
+        <div className="flex flex-col overflow-hidden rounded-[2rem] border border-border bg-card lg:col-span-2">
+          <div className="relative h-44 shrink-0 border-b border-border"><MapArt labels={false} /></div>
+          <div className="p-7">
             <p className="font-heading text-xl font-bold leading-tight">{t("never.mapTitle")}</p>
-            <p className="mt-1 text-sm text-muted-foreground">{t("never.mapBody")}</p>
+            <p className="mt-1.5 text-sm text-muted-foreground">{t("never.mapBody")}</p>
           </div>
         </div>
         <div className="flex flex-col justify-between gap-6 rounded-[2rem] bg-leaf-soft p-7 lg:col-span-2">

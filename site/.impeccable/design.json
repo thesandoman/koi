@@ -1,0 +1,417 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-25T03:59:42.733831+00:00",
+  "title": "Design System: Koi",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Cool Paper",
+        "canonical": "#F4F6F1",
+        "tonalRamp": [
+          "#363635",
+          "#727371",
+          "#AFB0AC",
+          "#EBEDE8",
+          "#F6F8F4",
+          "#F9FAF7",
+          "#FBFCFA",
+          "#FEFEFE"
+        ]
+      },
+      "paper-2": {
+        "role": "neutral",
+        "displayName": "Paper Two",
+        "canonical": "#E8EDE6",
+        "tonalRamp": [
+          "#333433",
+          "#6C6F6C",
+          "#A6AAA5",
+          "#DFE4DD",
+          "#EDF1EB",
+          "#F2F5F1",
+          "#F7F9F7",
+          "#FDFDFC"
+        ]
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Card",
+        "canonical": "#FBFCF9",
+        "tonalRamp": [
+          "#373737",
+          "#757674",
+          "#B4B4B2",
+          "#F2F3F0",
+          "#FCFDFA",
+          "#FDFDFC",
+          "#FEFEFD",
+          "#FFFFFE"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#15201C",
+        "tonalRamp": [
+          "#050706",
+          "#0A0F0D",
+          "#0F1714",
+          "#141F1B",
+          "#434C49",
+          "#7A807E",
+          "#B1B5B3",
+          "#E8E9E8"
+        ]
+      },
+      "body": {
+        "role": "neutral",
+        "displayName": "Body",
+        "canonical": "#46534D",
+        "tonalRamp": [
+          "#0F1211",
+          "#212724",
+          "#323B37",
+          "#43504A",
+          "#6B7570",
+          "#969D9A",
+          "#C1C6C4",
+          "#ECEEED"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Line",
+        "canonical": "#CCD6CF",
+        "tonalRamp": [
+          "#2D2F2E",
+          "#5F6461",
+          "#929994",
+          "#C4CEC7",
+          "#D6DED9",
+          "#E2E8E4",
+          "#EEF1EF",
+          "#FAFBFA"
+        ]
+      },
+      "rose": {
+        "role": "primary",
+        "displayName": "Koi Rose",
+        "canonical": "#C42E57",
+        "tonalRamp": [
+          "#2B0A13",
+          "#5C1629",
+          "#8C213E",
+          "#BD2C54",
+          "#D05878",
+          "#DE88A0",
+          "#EBB9C7",
+          "#F9EAEE"
+        ]
+      },
+      "leaf": {
+        "role": "secondary",
+        "displayName": "Pond Leaf",
+        "canonical": "#2E7D5B",
+        "tonalRamp": [
+          "#0A1B14",
+          "#163A2B",
+          "#215941",
+          "#2C7858",
+          "#58977C",
+          "#88B5A2",
+          "#B9D4C8",
+          "#EAF2EF"
+        ]
+      },
+      "leaf-soft": {
+        "role": "secondary",
+        "displayName": "Leaf Wash",
+        "canonical": "#DCEFE4",
+        "tonalRamp": [
+          "#303532",
+          "#67706B",
+          "#9DABA3",
+          "#D4E6DC",
+          "#E3F2E9",
+          "#EBF6F0",
+          "#F3FAF6",
+          "#FCFDFC"
+        ]
+      },
+      "pond": {
+        "role": "neutral",
+        "displayName": "Pond",
+        "canonical": "#14201B",
+        "tonalRamp": [
+          "#040706",
+          "#090F0D",
+          "#0E1713",
+          "#131F1A",
+          "#434C48",
+          "#7A807E",
+          "#B1B5B3",
+          "#E8E9E8"
+        ]
+      },
+      "pond-card": {
+        "role": "neutral",
+        "displayName": "Pond Card",
+        "canonical": "#1F2E28",
+        "tonalRamp": [
+          "#070A09",
+          "#0E1613",
+          "#16211D",
+          "#1E2C27",
+          "#4C5853",
+          "#808885",
+          "#B4B9B7",
+          "#E9EAEA"
+        ]
+      },
+      "pond-line": {
+        "role": "neutral",
+        "displayName": "Pond Line",
+        "canonical": "#33443C",
+        "tonalRamp": [
+          "#0B0F0D",
+          "#18201C",
+          "#24312B",
+          "#31413A",
+          "#5C6963",
+          "#8B9590",
+          "#BBC1BE",
+          "#EBECEC"
+        ]
+      },
+      "pond-ink": {
+        "role": "neutral",
+        "displayName": "Pond Ink",
+        "canonical": "#EEF2EC",
+        "tonalRamp": [
+          "#343534",
+          "#6F716E",
+          "#AAADA9",
+          "#E5E9E3",
+          "#F1F5F0",
+          "#F5F8F4",
+          "#F9FBF9",
+          "#FDFEFD"
+        ]
+      },
+      "pond-body": {
+        "role": "neutral",
+        "displayName": "Pond Body",
+        "canonical": "#AEBDB5",
+        "tonalRamp": [
+          "#262A28",
+          "#515855",
+          "#7C8781",
+          "#A8B6AE",
+          "#BECAC4",
+          "#D1DAD5",
+          "#E4E9E6",
+          "#F7F8F8"
+        ]
+      },
+      "rose-on-pond": {
+        "role": "primary",
+        "displayName": "Koi Rose on Pond",
+        "canonical": "#F28CA6",
+        "tonalRamp": [
+          "#351F25",
+          "#71414E",
+          "#AD6477",
+          "#E987A0",
+          "#F5A3B8",
+          "#F8BECC",
+          "#FBD9E1",
+          "#FEF4F6"
+        ]
+      },
+      "leaf-on-pond": {
+        "role": "secondary",
+        "displayName": "Pond Leaf on Pond",
+        "canonical": "#62C195",
+        "tonalRamp": [
+          "#162A21",
+          "#2E5A46",
+          "#468A6B",
+          "#5EBA8F",
+          "#81CDAA",
+          "#A6DCC3",
+          "#CBEADC",
+          "#EFF9F4"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The hero headline only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings and big statements."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Names and card headings inside the phone."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Reading text, about 46ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Captions and form labels, sentence case."
+      }
+    },
+    "shadows": [
+      {
+        "name": "phone",
+        "value": "0 12px 24px rgb(21 32 28 / .16), 0 50px 80px -24px rgb(21 32 28 / .38)",
+        "purpose": "The device only."
+      },
+      {
+        "name": "floating-bar",
+        "value": "0 1px 2px rgb(0 0 0 / .06), 0 8px 24px -12px rgb(0 0 0 / .25)",
+        "purpose": "The top nav pill."
+      },
+      {
+        "name": "notification",
+        "value": "0 1px 2px rgb(0 0 0 / .06), 0 10px 24px -14px rgb(0 0 0 / .3)",
+        "purpose": "Notification rows and the sign-up card."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Screen swaps, reveals, ripples."
+      },
+      {
+        "name": "pin-drop",
+        "value": "spring stiffness 520, damping 13",
+        "purpose": "A pin landing on the map."
+      },
+      {
+        "name": "thumb-slide",
+        "value": "spring duration 0.35, bounce 0",
+        "purpose": "Segmented control thumb and toggle."
+      },
+      {
+        "name": "ripple",
+        "value": "scale 0.1 to 1 over 1.5s, three rings 0.16s apart",
+        "purpose": "Spreads from a pin (leaf) and from the unlock (rose)."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one action per view; rose, pill, lifts 1px on hover.",
+      "html": "<button class=\"ds-btn-primary\">Hook pinkies</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:9999px;font:600 15px 'Inter Koi',system-ui,sans-serif;border:1px solid transparent;cursor:pointer;transition:transform .2s ease,background-color .2s ease;background:#C42E57;color:#fff;box-shadow:0 6px 14px -6px rgba(196,46,87,.7)}.ds-btn-primary:hover{transform:translateY(-1px)}.ds-btn-primary:active{transform:scale(.98)}.ds-btn-primary:focus-visible{outline:3px solid #1B5FD1;outline-offset:3px}"
+    },
+    {
+      "name": "Plain Button",
+      "kind": "button",
+      "refersTo": "button-plain",
+      "description": "Secondary action on a card surface.",
+      "html": "<button class=\"ds-btn-plain\">Step back</button>",
+      "css": ".ds-btn-plain{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:9999px;font:600 15px 'Inter Koi',system-ui,sans-serif;border:1px solid transparent;cursor:pointer;transition:transform .2s ease,background-color .2s ease;background:#FBFCF9;color:#15201C;border-color:#CCD6CF}.ds-btn-plain:hover{background:#E8EDE6}.ds-btn-plain:focus-visible{outline:3px solid #1B5FD1;outline-offset:3px}"
+    },
+    {
+      "name": "Ink Button",
+      "kind": "button",
+      "refersTo": "button-ink",
+      "description": "Strong neutral action inside the phone.",
+      "html": "<button class=\"ds-btn-ink\">Open our plan</button>",
+      "css": ".ds-btn-ink{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:9999px;font:600 15px 'Inter Koi',system-ui,sans-serif;border:1px solid transparent;cursor:pointer;transition:transform .2s ease,background-color .2s ease;background:#15201C;color:#F4F6F1}.ds-btn-ink:hover{transform:translateY(-1px)}.ds-btn-ink:focus-visible{outline:3px solid #1B5FD1;outline-offset:3px}"
+    },
+    {
+      "name": "Place Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "A venue you can pin; selected takes Leaf Wash.",
+      "html": "<button class=\"ds-chip\" aria-pressed=\"false\">Lumphini Park</button> <button class=\"ds-chip ds-chip-on\" aria-pressed=\"true\">Or Tor Kor Market</button>",
+      "css": ".ds-chip{min-height:44px;padding:0 14px;border-radius:9999px;border:1px solid #CCD6CF;background:#FBFCF9;color:#46534D;font:500 13px 'Inter Koi',system-ui,sans-serif;cursor:pointer}.ds-chip:hover{color:#15201C}.ds-chip-on{background:#DCEFE4;border-color:#2E7D5B;color:#15201C}.ds-chip:focus-visible{outline:3px solid #1B5FD1;outline-offset:3px}"
+    },
+    {
+      "name": "Segmented Control",
+      "kind": "nav",
+      "refersTo": "button-plain",
+      "description": "Pill with a sliding thumb; language and whose phone.",
+      "html": "<div class=\"ds-seg\" role=\"radiogroup\"><button class=\"ds-seg-on\" role=\"radio\" aria-checked=\"true\">Your phone</button><button role=\"radio\" aria-checked=\"false\">Sam's phone</button></div>",
+      "css": ".ds-seg{display:inline-flex;gap:0;padding:4px;border-radius:30px;background:#E8EDE6;height:52px;box-sizing:border-box}.ds-seg button{border:0;background:transparent;padding:0 16px;border-radius:26px;font:500 15px 'Inter Koi',system-ui,sans-serif;color:#46534D;cursor:pointer}.ds-seg .ds-seg-on{background:#FBFCF9;color:#15201C;box-shadow:0 1px 2px rgba(0,0,0,.08)}.ds-seg button:focus-visible{outline:3px solid #1B5FD1;outline-offset:2px}"
+    },
+    {
+      "name": "Bento Statement Cell",
+      "kind": "card",
+      "refersTo": "bento-cell",
+      "description": "A large typographic statement with one plain line beneath.",
+      "html": "<div class=\"ds-cell\"><p class=\"ds-cell-h\">No swiping.</p><p class=\"ds-cell-p\">A short set each day, then you're done. No endless feed.</p></div>",
+      "css": ".ds-cell{display:flex;flex-direction:column;justify-content:space-between;gap:24px;min-height:208px;padding:28px;border-radius:32px;border:1px solid #CCD6CF;background:#FBFCF9;color:#15201C}.ds-cell-h{margin:0;font:800 clamp(2.25rem,5vw,3.75rem)/.98 Bricolage,system-ui,sans-serif;letter-spacing:-.035em}.ds-cell-p{margin:0;max-width:36ch;color:#46534D;font:400 17px/1.6 'Inter Koi',system-ui,sans-serif}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Tracing-Paper Pond",
+    "overview": "Koi looks like a Bangkok street map drawn on tracing paper, laid over a pond. The ground is a cool paper in daylight and a deep pond green-black at night. Roads are dotted hairlines, the river a soft band, parks pale leaf patches, and the only things on top are places: leaf-green pins. People never appear. Everything is shown through one phone that follows the reader down the page.\n\nThe tone is calm and grown-up. Type is big and tight and carries the personality; surfaces stay quiet. Rose is rationed to primary actions and the unlock. The signature is a ripple that spreads from every pin you drop and, in rose, from the unlock.",
+    "keyCharacteristics": [
+      "Cool paper or pond ground, never warm cream.",
+      "Large Bricolage Grotesque headings, Inter for reading, Noto Sans Thai for Thai.",
+      "One device (the phone) as the main stage; no feature-card grid.",
+      "Leaf green means private, safe, confirmed. Rose means act or unlock.",
+      "Motion answers a touch: pin drop spring, ripple, sliding pill, screen swap."
+    ],
+    "rules": [
+      {
+        "name": "The One Voice Rule",
+        "body": "Rose covers a small share of any view and never decorates. If it is not an action or an unlock, it is not rose.",
+        "section": "colors"
+      },
+      {
+        "name": "The Leaf Means State Rule",
+        "body": "Green only ever says yours, private, safe, or confirmed.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tight Headline Rule",
+        "body": "Headlines tighten tracking (never below -0.04em) in Latin and reset to 0 in Thai.",
+        "section": "typography"
+      },
+      {
+        "name": "The Lifted Objects Only Rule",
+        "body": "If a thing is not a device, a floating bar, or a notification, it gets no shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep rose to primary actions and the unlock panel.",
+      "Do ripple from the pin (leaf) and from the unlock (rose).",
+      "Do keep the ground cool: Cool Paper by day, Pond by night.",
+      "Do label example people and places as examples.",
+      "Do keep tap targets at 44px or more and run every string in Thai and English."
+    ],
+    "donts": [
+      "Don't add feature cards with an icon, a heading and text.",
+      "Don't put people, faces or live locations on the map.",
+      "Don't use gradients, glass blur or hard offset shadows.",
+      "Don't add eyebrow labels above headings or numbered steps.",
+      "Don't invent statistics, testimonials or partner names."
+    ]
+  }
+}
